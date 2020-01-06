@@ -1,1 +1,2 @@
-# otus_java_2019_12
+Evgeniya Yanchenko (Евгения Янченко)
+miralasse@yandex.ru
