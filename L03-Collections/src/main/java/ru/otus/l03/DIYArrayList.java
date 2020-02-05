@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 /**
  * DIYArrayList.
@@ -27,7 +28,7 @@ public class DIYArrayList<E> implements List<E> {
     }
 
     public DIYArrayList(int capacity) {
-        if (capacity <=0) {
+        if (capacity <= 0) {
             throw new IllegalArgumentException(WRONG_CAPACITY_MSG);
         }
         array = new Object[capacity];
@@ -65,6 +66,7 @@ public class DIYArrayList<E> implements List<E> {
             array = Arrays.copyOf(array, newLength);
         }
         System.arraycopy(collection.toArray(), 0, array, size, collection.size());
+        size = newLength;
         return true;
     }
 
@@ -86,21 +88,92 @@ public class DIYArrayList<E> implements List<E> {
 
     @Override
     public E get(int index) {
-        throw new UnsupportedOperationException();
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        return (E) array[index];
     }
 
     @Override
     public E set(int index, E element) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        throw new UnsupportedOperationException();
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        E oldValue = (E) array[index];
+        array[index] = element;
+        return oldValue;
     }
 
     @Override
     public Iterator<E> iterator() {
+        return new MyIterator();
+    }
+
+    private class MyIterator implements Iterator<E> {
+        int pointer = 0;
+
+        @Override
+        public boolean hasNext() {
+            return pointer < size;
+        }
+
+        @Override
+        public E next() {
+            if (pointer >= size) {
+                throw new NoSuchElementException();
+            }
+            return (E) array[pointer++];
+        }
+    }
+
+    private class MyListIterator extends MyIterator implements ListIterator<E> {
+
+        @Override
+        public boolean hasPrevious() {
+            return pointer != 0;
+        }
+
+        @Override
+        public E previous() {
+            if (pointer < 0 ||pointer >= size) {
+                throw new NoSuchElementException();
+            }
+            return (E) array[--pointer];
+        }
+
+        @Override
+        public int nextIndex() {
+            return pointer;
+        }
+
+        @Override
+        public int previousIndex() {
+            return pointer - 1;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void set(E element) {
+            DIYArrayList.this.set(pointer - 1, element);
+        }
+
+        @Override
+        public void add(E e) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    @Override
+    public ListIterator<E> listIterator() {
+       return new MyListIterator();
+    }
+
+    @Override
+    public boolean contains(Object o) {
         throw new UnsupportedOperationException();
     }
 
@@ -151,11 +224,6 @@ public class DIYArrayList<E> implements List<E> {
 
     @Override
     public int lastIndexOf(Object o) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public ListIterator<E> listIterator() {
         throw new UnsupportedOperationException();
     }
 
