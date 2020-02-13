@@ -22,14 +22,16 @@
 
     <modules>
         <module>L01-maven</module>
+        <module>L03-Collections</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>13</maven.compiler.source>
-        <maven.compiler.target>13</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <com.google.guava.version>27.1-jre</com.google.guava.version>
-        <my.variable>42</my.variable>
+        <junit.version>5.5.2</junit.version>
+        <assertj.version>3.9.0</assertj.version>
     </properties>
 
     <dependencyManagement>
