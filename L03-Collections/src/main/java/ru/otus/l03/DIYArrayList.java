@@ -20,6 +20,9 @@ public class DIYArrayList<E> implements List<E> {
 
     private static final int INITIAL_CAPACITY = 10;
     private static final float INCREASE_FACTOR = 2.0f;
+    private static final float DECREASE_FACTOR = 2.0f;
+    private static final int REDUCTION_FACTOR = 4;
+
     private int size;
     private Object[] array;
 
@@ -50,7 +53,8 @@ public class DIYArrayList<E> implements List<E> {
         if (size >= array.length) {
             array = Arrays.copyOf(array, (int)(size * INCREASE_FACTOR));
         }
-        array[size++] = e;
+        array[size] = e;
+        size++;
         return true;
     }
 
@@ -82,7 +86,11 @@ public class DIYArrayList<E> implements List<E> {
         }
         E element = (E) array[index];
         System.arraycopy(array, index + 1, array, index, array.length - index - 1);
-        array[size--] = null;
+        array[size] = null;
+        size--;
+        if (size > INITIAL_CAPACITY && size < array.length / REDUCTION_FACTOR) {
+            array = Arrays.copyOf(array, (int)(size / DECREASE_FACTOR));
+        }
         return element;
     }
 
