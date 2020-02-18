@@ -23,6 +23,7 @@
     <modules>
         <module>L01-maven</module>
         <module>L03-Collections</module>
+        <module>L09-Annotations</module>
     </modules>
 
     <properties>
@@ -32,6 +33,7 @@
         <com.google.guava.version>27.1-jre</com.google.guava.version>
         <junit.version>5.5.2</junit.version>
         <assertj.version>3.9.0</assertj.version>
+        <lombok.version>1.18.8</lombok.version>
     </properties>
 
     <dependencyManagement>
