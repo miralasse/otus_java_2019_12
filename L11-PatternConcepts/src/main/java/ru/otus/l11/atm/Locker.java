@@ -1,48 +1,23 @@
 package ru.otus.l11.atm;
 
-
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
  * Locker.
  *
  * @author Evgeniya_Yanchenko
  */
+public interface Locker {
 
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Locker {
+    BanknoteType getBanknoteType();
 
-    public static final String WRONG_NUMBER_OF_BANKNOTES = "Некорректное количество купюр";
+    int getNumberOfBanknotes();
 
-    private final BanknoteType banknoteType;
-    private int numberOfBanknotes;
+    void addBanknotes(int numberToAdd);
 
-    public static Locker of(BanknoteType banknoteType, int numberOfBanknotes) {
-        if (numberOfBanknotes < 0) {
-            throw new IllegalArgumentException(WRONG_NUMBER_OF_BANKNOTES);
-        }
-        return new Locker(banknoteType, numberOfBanknotes);
-    }
+    int withdrawBanknotes(int banknotesToWithdraw);
 
-    public void addBanknotes(int numberToAdd) {
-        if (numberToAdd <= 0) {
-            throw new IllegalArgumentException(WRONG_NUMBER_OF_BANKNOTES);
-        }
-        numberOfBanknotes += numberToAdd;
-    }
+    long getAmount();
 
-    public void giveBanknotes(int numberToDelete) {
-        if (numberToDelete <= 0) {
-            throw new IllegalArgumentException(WRONG_NUMBER_OF_BANKNOTES);
-        }
-        numberOfBanknotes -= numberToDelete;
-    }
+    boolean allowWithdrawal(int wantedNumberOfBanknotes);
 
-    public long getAmount() {
-        return (long) banknoteType.getNominalValue() * numberOfBanknotes;
-    }
 
 }

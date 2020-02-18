@@ -3,7 +3,7 @@ package ru.otus.l11.atm;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ru.otus.l11.atm.ATM.LIMIT_ERROR;
+import static ru.otus.l11.atm.ATMImpl.LIMIT_ERROR;
 import static ru.otus.l11.atm.BanknoteType.FIFTY;
 import static ru.otus.l11.atm.BanknoteType.FIVE_HUNDRED;
 import static ru.otus.l11.atm.BanknoteType.FIVE_THOUSAND;
@@ -22,23 +22,23 @@ import java.util.Set;
  *
  * @author Evgeniya_Yanchenko
  */
-class ATMTest {
+class ATMImplTest {
 
     private static final int STANDARD_NUMBER_OF_BANKNOTES = 100;
-    private ATM atm;
+    private ATMImpl atm;
     private Set<Locker> lockerSet;
 
     @BeforeEach
     void setUp() {
-        atm = new ATM();
+        atm = new ATMImpl();
         lockerSet = Set.of(
-                Locker.of(FIFTY, STANDARD_NUMBER_OF_BANKNOTES),
-                Locker.of(ONE_HUNDRED, STANDARD_NUMBER_OF_BANKNOTES),
-                Locker.of(TWO_HUNDRED, STANDARD_NUMBER_OF_BANKNOTES),
-                Locker.of(FIVE_HUNDRED, STANDARD_NUMBER_OF_BANKNOTES),
-                Locker.of(ONE_THOUSAND, STANDARD_NUMBER_OF_BANKNOTES),
-                Locker.of(TWO_THOUSAND, STANDARD_NUMBER_OF_BANKNOTES),
-                Locker.of(FIVE_THOUSAND, STANDARD_NUMBER_OF_BANKNOTES)
+                LockerImpl.of(FIFTY, STANDARD_NUMBER_OF_BANKNOTES),
+                LockerImpl.of(ONE_HUNDRED, STANDARD_NUMBER_OF_BANKNOTES),
+                LockerImpl.of(TWO_HUNDRED, STANDARD_NUMBER_OF_BANKNOTES),
+                LockerImpl.of(FIVE_HUNDRED, STANDARD_NUMBER_OF_BANKNOTES),
+                LockerImpl.of(ONE_THOUSAND, STANDARD_NUMBER_OF_BANKNOTES),
+                LockerImpl.of(TWO_THOUSAND, STANDARD_NUMBER_OF_BANKNOTES),
+                LockerImpl.of(FIVE_THOUSAND, STANDARD_NUMBER_OF_BANKNOTES)
         );
         atm.addLockers(lockerSet);
     }
