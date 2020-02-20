@@ -7,6 +7,7 @@ import static lombok.AccessLevel.PRIVATE;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -70,24 +71,18 @@ public class TestRunner {
         methodAfterClass.invoke(null);
     }
 
-    private Method findAnnotatedMethod(Class<?> annotationType) {
+    private Method findAnnotatedMethod(Class<? extends Annotation> annotationType) {
         Method[] methods = aClass.getMethods();
         return Arrays.stream(methods)
-                .filter(method ->
-                        Arrays.stream(method.getDeclaredAnnotations())
-                                .anyMatch(annotation -> annotation.annotationType().equals(annotationType))
-                )
+                .filter(method -> method.isAnnotationPresent(annotationType))
                 .findFirst()
                 .orElse(null);
     }
 
-    private List<Method> findAnnotatedMethods(Class<?> annotationType) {
+    private List<Method> findAnnotatedMethods(Class<? extends Annotation> annotationType) {
         Method[] methods = aClass.getMethods();
         return Arrays.stream(methods)
-                .filter(method ->
-                        Arrays.stream(method.getDeclaredAnnotations())
-                                .anyMatch(annotation -> annotation.annotationType().equals(annotationType))
-                )
+                .filter(method -> method.isAnnotationPresent(annotationType))
                 .collect(toList());
     }
 
