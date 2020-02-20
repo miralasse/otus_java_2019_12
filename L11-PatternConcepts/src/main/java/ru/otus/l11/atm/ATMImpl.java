@@ -11,7 +11,7 @@ import java.util.TreeMap;
  *
  * @author Evgeniya_Yanchenko
  */
-public class ATMImpl implements ATM {
+public class ATMImpl implements ClientInteractingATM, BankRespondingATM {
 
     public static final String LIMIT_ERROR = "Запрашиваемая сумма не может быть выдана";
     public static final String LOCKER_ALREADY_EXISTS_ERROR = "Ячейка с таким номиналом купюр уже есть в банкомате";
