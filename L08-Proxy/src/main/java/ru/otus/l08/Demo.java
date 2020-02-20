@@ -9,7 +9,8 @@ public class Demo {
 
     public static void main(String[] args) {
         Logging logClass = IoC.createLoggingClass();
-        logClass.calculationWithLogging(6);
+        logClass.calculation(6);
+        logClass.calculation(6, 4);
         logClass.calculationWithoutLogging(6);
     }
 }

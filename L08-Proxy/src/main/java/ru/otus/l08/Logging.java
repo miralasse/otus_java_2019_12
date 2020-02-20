@@ -7,7 +7,9 @@ package ru.otus.l08;
  */
 public interface Logging {
 
-    void calculationWithLogging(int param);
+    void calculation(int param);
+
+    void calculation(int param, int secondParam);
 
     void calculationWithoutLogging(int param);
 }

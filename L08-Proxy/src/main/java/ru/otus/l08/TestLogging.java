@@ -9,8 +9,13 @@ public class TestLogging implements Logging{
 
     @Log
     @Override
-    public void calculationWithLogging(int param) {
+    public void calculation(int param) {
         System.out.println("2x-result: " + param * 2);
+    }
+
+    @Override
+    public void calculation(int param, int secondParam) {
+        System.out.println("total result: " + (param + secondParam));
     }
 
     @Override
