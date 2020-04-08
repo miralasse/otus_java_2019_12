@@ -18,9 +18,12 @@ import java.util.Map;
  */
 public class DiyGson {
 
+    public static final String NULL_TEXT = "null";
+
+
     public String toJson(Object object) {
         if (object == null) {
-            return null;
+            return NULL_TEXT;
         }
 
         if (isKnownType(object)) {
@@ -53,32 +56,43 @@ public class DiyGson {
         }
 
         if (isArrayOrCollection(object)) {
-            if (object instanceof Collection) {
-                object = ((Collection<Object>)object).toArray();
-            }
-            int length = Array.getLength(object);
-            List<String> arrayElements = new ArrayList<>(length);
-
-            for (int i = 0; i < length; i++) {
-                Object arrayElement = Array.get(object, i);
-                arrayElements.add(createJsonElement(arrayElement));
-            }
-            return wrapWithBrackets(String.join(",", arrayElements));
+            return handleArrayOrCollection(object);
         }
 
         if (isMap(object)) {
-            Map<Object, Object> map = (Map)object;
-            List<String> mapElements = new ArrayList<>(map.size());
-
-            for (Map.Entry<Object, Object> entry : map.entrySet()) {
-                String key = wrapWithQuoteMarks(entry.getKey().toString());
-                String value = wrapWithQuoteMarks(entry.getValue().toString());
-                mapElements.add(key + ":" + value);
-            }
-            return wrapWithBraces(String.join(",", mapElements));
+            return handleMap(object);
         }
 
         return processFields(object);
+    }
+
+
+    private String handleArrayOrCollection(Object object) {
+        Object array = object;
+        if (object instanceof Collection) {
+            array = ((Collection<Object>) object).toArray();
+        }
+        int length = Array.getLength(array);
+        List<String> arrayElements = new ArrayList<>(length);
+
+        for (int i = 0; i < length; i++) {
+            Object arrayElement = Array.get(array, i);
+            arrayElements.add(createJsonElement(arrayElement));
+        }
+        return wrapWithBrackets(String.join(",", arrayElements));
+    }
+
+
+    private String handleMap(Object object) {
+        Map<Object, Object> map = (Map) object;
+        List<String> mapElements = new ArrayList<>(map.size());
+
+        for (Map.Entry<Object, Object> entry : map.entrySet()) {
+            String key = wrapWithQuoteMarks(entry.getKey().toString());
+            String value = wrapWithQuoteMarks(entry.getValue().toString());
+            mapElements.add(key + ":" + value);
+        }
+        return wrapWithBraces(String.join(",", mapElements));
     }
 
 
