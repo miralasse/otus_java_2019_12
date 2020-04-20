@@ -26,6 +26,7 @@
         <module>L08-Proxy</module>
         <module>L09-Annotations</module>
         <module>L11-PatternConcepts</module>
+        <module>L15-JsonSerialization</module>
     </modules>
 
     <properties>
