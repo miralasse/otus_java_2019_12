@@ -1,6 +1,9 @@
 package ru.otus.l27;
 
 
+import static java.lang.String.format;
+
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -17,6 +20,7 @@ public class CounterDemo {
 
     private Lock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
+    private CountDownLatch countDownLatch = new CountDownLatch(1);
 
     private String latest = "";
 
@@ -32,19 +36,18 @@ public class CounterDemo {
         Thread thread2 = createNamedThread("thread2");
 
         thread1.start();
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            e.printStackTrace();
+        }
         thread2.start();
 
         try {
             thread1.join();
-        } catch (InterruptedException e) {
-            thread1.interrupt();
-            e.printStackTrace();
-        }
-
-        try {
             thread2.join();
         } catch (InterruptedException e) {
-            thread2.interrupt();
             e.printStackTrace();
         }
 
@@ -60,6 +63,9 @@ public class CounterDemo {
 
 
     private void count(String threadName) {
+        if (countDownLatch.getCount() > 0) {
+            countDownLatch.countDown();
+        }
         for (int i = START; i < LIMIT; i++) {
             print(i, threadName);
         }
@@ -75,7 +81,7 @@ public class CounterDemo {
             while (threadName.equals(latest)) {
                 condition.await();
             }
-            System.out.printf("%d ", i);
+            System.out.println(format("%s: %d ", threadName, i));
             sleep(threadName);
             latest = threadName;
             condition.signalAll();
@@ -88,7 +94,7 @@ public class CounterDemo {
         }
     }
 
-    
+
     private void sleep(String threadName) {
         try {
             if (threadName.contains("1")) {
