@@ -27,6 +27,7 @@
         <module>L09-Annotations</module>
         <module>L11-PatternConcepts</module>
         <module>L15-JsonSerialization</module>
+        <module>L27-Multithreading</module>
     </modules>
 
     <properties>
