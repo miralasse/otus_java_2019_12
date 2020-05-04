@@ -155,7 +155,7 @@ public class ATMImpl implements ATM {
 
     @Override
     public void restoreState() {
-        this.lockers = savedState.mementoLockers;
+        this.lockers = copyMapOfLockers(savedState.mementoLockers);
     }
 
 

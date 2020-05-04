@@ -14,13 +14,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.otus.l13.atm.ATM;
 import ru.otus.l13.atm.ATMCreator;
-import ru.otus.l13.atm.Countable;
 import ru.otus.l13.locker.Locker;
 import ru.otus.l13.locker.LockerImpl;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 /**
  * ATMDepartmentTest.
@@ -32,6 +30,8 @@ public class ATMDepartmentTest {
     private static final int FIRST_ATM_NUMBER_OF_BANKNOTES = 100;
     private static final int SECOND_ATM_NUMBER_OF_BANKNOTES = 50;
     private static final int THIRD_ATM_NUMBER_OF_BANKNOTES = 80;
+
+    private static final int DEPARTMENT_TOTAL = 1_605_500;
 
     private ATMDepartment department;
     private ATM firstATM;
@@ -73,11 +73,8 @@ public class ATMDepartmentTest {
 
     @Test
     void testGetTotalAmount() {
-        long expectedSum = Stream.of(firstATM, secondATM, thirdATM)
-                .mapToLong(Countable::getTotalAmount)
-                .sum();
         long actualSum = department.getTotalAmount();
-        assertThat(actualSum).isEqualTo(expectedSum);
+        assertThat(actualSum).isEqualTo(DEPARTMENT_TOTAL);
     }
 
     @Test
@@ -102,5 +99,26 @@ public class ATMDepartmentTest {
         assertThat(clone).isEqualTo(department);
     }
 
+    @Test
+    void testSaveAndRestoreAtmTwice() {
+        long totalInit = department.getTotalAmount();
+        assertThat(totalInit).isEqualTo(DEPARTMENT_TOTAL);
+
+        firstATM.withdraw(1500);
+        long totalAfterWithdraw = department.getTotalAmount();
+        assertThat(totalAfterWithdraw).isEqualTo(1_604_000);
+
+        department.restoreATMState();
+        long totalAfterFirstRestore = department.getTotalAmount();
+        assertThat(totalAfterFirstRestore).isEqualTo(DEPARTMENT_TOTAL);
+
+        firstATM.withdraw(2000);
+        long totalAfterSecondWithdraw = department.getTotalAmount();
+        assertThat(totalAfterSecondWithdraw).isEqualTo(1_603_500);
+
+        department.restoreATMState();
+        long totalAfterSecondRestore = department.getTotalAmount();
+        assertThat(totalAfterSecondRestore).isEqualTo(DEPARTMENT_TOTAL);
+    }
 
 }
