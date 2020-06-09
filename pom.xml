@@ -22,11 +22,14 @@
 
     <modules>
         <module>L01-maven</module>
-        <module>L03-Collections</module>   
+        <module>L03-Collections</module>  
+        <module>L05-GC</module>
         <module>L08-Proxy</module>
         <module>L09-Annotations</module>
         <module>L11-PatternConcepts</module>
         <module>L13-PatternsExample</module>
+        <module>L15-JsonSerialization</module>
+        <module>L27-Multithreading</module> 
     </modules>
 
     <properties>
