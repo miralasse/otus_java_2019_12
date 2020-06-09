@@ -28,6 +28,7 @@
         <module>L11-PatternConcepts</module>
         <module>L15-JsonSerialization</module>
         <module>L27-Multithreading</module>
+        <module>L05-GC</module>
     </modules>
 
     <properties>
