@@ -22,14 +22,15 @@
 
     <modules>
         <module>L01-maven</module>
-        <module>L03-Collections</module>  
+        <module>L03-Collections</module>
         <module>L05-GC</module>
         <module>L08-Proxy</module>
         <module>L09-Annotations</module>
         <module>L11-PatternConcepts</module>
         <module>L13-PatternsExample</module>
         <module>L15-JsonSerialization</module>
-        <module>L27-Multithreading</module> 
+        <module>L27-Multithreading</module>
+        <module>L17-Jdbc</module>
     </modules>
 
     <properties>
@@ -48,24 +49,6 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${com.google.guava.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-api</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.assertj</groupId>
-                <artifactId>assertj-core</artifactId>
-                <version>${assertj.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
