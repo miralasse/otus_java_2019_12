@@ -29,7 +29,7 @@
         <module>L11-PatternConcepts</module>
         <module>L13-PatternsExample</module>
         <module>L15-JsonSerialization</module>
-        <module>L17-Jdbc</module
+        <module>L17-Jdbc</module>
         <module>L19-Hibernate</module>
         <module>L27-Multithreading</module>
     </modules>
