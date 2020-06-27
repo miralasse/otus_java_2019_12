@@ -1,7 +1,10 @@
 package ru.otus;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.otus.cachehw.MyCache;
+import ru.otus.core.dao.UserDao;
 import ru.otus.core.model.User;
 import ru.otus.core.service.DbServiceUserImpl;
 import ru.otus.h2.DataSourceH2;
@@ -18,17 +21,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CacheTest {
 
-    private SessionManagerJdbc sessionManager;
+    private DataSource dataSource;
+    private UserDao userDao;
 
     @BeforeEach
     public void setUp() throws Exception {
-        var dataSource = new DataSourceH2();
-        createUserTable(dataSource);
-        sessionManager = new SessionManagerJdbc(dataSource);
-
+        dataSource = new DataSourceH2();
+        createUserTable();
+        SessionManagerJdbc sessionManager = new SessionManagerJdbc(dataSource);
+        DbExecutorImpl<User> dbExecutor = new DbExecutorImpl<>();
+        userDao = new UserDaoWithMapperImpl(sessionManager, dbExecutor);
     }
 
-    private void createUserTable(DataSource dataSource) throws SQLException {
+    private void createUserTable() throws SQLException {
         try (var connection = dataSource.getConnection();
              var pst = connection.prepareStatement("create table user(id long auto_increment, name varchar(50), age integer)")) {
             pst.executeUpdate();
@@ -36,13 +41,19 @@ public class CacheTest {
         System.out.println("user table created");
     }
 
-    @Test
-    public void testUserService() {
-        DbExecutorImpl<User> dbExecutor = new DbExecutorImpl<>();
-        var userDao = new UserDaoWithMapperImpl(sessionManager, dbExecutor);
+    @AfterEach
+    public void cleanUp() throws SQLException {
+        try (var connection = dataSource.getConnection();
+             var pst = connection.prepareStatement("drop table user")) {
+            pst.executeUpdate();
+        }
+        System.out.println("user table removed");
+    }
 
+    @Test
+    public void testCacheWhenSaving() {
         //use UserService without caching
-        var dbServiceUser = new DbServiceUserImpl(userDao, false);
+        var dbServiceUser = new DbServiceUserImpl(userDao, false, new MyCache<>());
 
         List<Long> userIds = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -64,6 +75,43 @@ public class CacheTest {
 
         long startWithCache = System.currentTimeMillis();
         userIds.forEach(dbServiceUser::getUser);
+        long spentOnReceivingWithCache = System.currentTimeMillis() - startWithCache;
+        System.out.println("С кэшем: " + spentOnReceivingWithCache + " мс");
+
+        assertThat(spentOnReceivingWithCache).isLessThan(spentWithoutCache);
+    }
+
+    @Test
+    public void testCacheWhenGettingTheSameUser() {
+        //use UserService without caching
+        var dbServiceUser = new DbServiceUserImpl(userDao, false, new MyCache<>());
+
+        List<Long> userIds = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            userIds.add(dbServiceUser.saveUser(new User(i, "User#" + i, 25)));
+        }
+        long start = System.currentTimeMillis();
+
+        //getting the same user 10 times
+        for (int i = 0; i < 10; i++) {
+            dbServiceUser.getUser(userIds.get(0));
+        }
+        long spentWithoutCache = System.currentTimeMillis() - start;
+        System.out.println("Без кэша: " + spentWithoutCache + " мс");
+
+        //enable cache
+        userIds.clear();
+        userIds = new ArrayList<>();
+        for (int i = 100; i < 110; i++) {
+            userIds.add(dbServiceUser.saveUser(new User(i, "User#" + i, 25)));
+        }
+        dbServiceUser.enableCaching(true);
+        long startWithCache = System.currentTimeMillis();
+
+        //getting the same user 10 times with cache
+        for (int i = 0; i < 10; i++) {
+            dbServiceUser.getUser(userIds.get(0));
+        }
         long spentOnReceivingWithCache = System.currentTimeMillis() - startWithCache;
         System.out.println("С кэшем: " + spentOnReceivingWithCache + " мс");
 

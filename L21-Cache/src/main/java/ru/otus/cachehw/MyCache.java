@@ -1,5 +1,8 @@
 package ru.otus.cachehw;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,28 +13,39 @@ import java.util.WeakHashMap;
  * created on 14.12.18.
  */
 public class MyCache<K, V> implements HwCache<K, V> {
-//Надо реализовать эти методы
 
-    Map<K, V> cache = new WeakHashMap<>();
-    List<HwListener<K, V>> listeners = new ArrayList<>();
+    private static final Logger logger = LoggerFactory.getLogger(MyCache.class);
+
+    private final Map<K, V> cache = new WeakHashMap<>();
+    private final List<HwListener<K, V>> listeners = new ArrayList<>();
 
     @Override
     public void put(K key, V value) {
         cache.putIfAbsent(key, value);
-        listeners.forEach(listener -> listener.notify(key, value, "was added to cache"));
+        notifyListeners(key, value, "was added to cache");
     }
 
     @Override
     public void remove(K key) {
         V removedValue = cache.remove(key);
-        listeners.forEach(listener -> listener.notify(key, removedValue, "was removed from cache"));
+        notifyListeners(key, removedValue, "was removed from cache");
     }
 
     @Override
     public V get(K key) {
         V value = cache.get(key);
-        listeners.forEach(listener -> listener.notify(key, value, "was received from cache"));
+        notifyListeners(key, value, "was received from cache");
         return value;
+    }
+
+    private void notifyListeners(K key, V value, String action) {
+        for (HwListener<K, V> listener : listeners) {
+            try {
+                listener.notify(key, value, action);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            }
+        }
     }
 
     @Override
