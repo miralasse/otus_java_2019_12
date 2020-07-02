@@ -2,17 +2,16 @@ package ru.otus.services;
 
 import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.util.security.Password;
-import ru.otus.dao.UserDao;
 import ru.otus.model.User;
 
 import java.util.Optional;
 
 public class InMemoryLoginServiceImpl extends AbstractLoginService {
 
-    private final UserDao userDao;
+    private final DBServiceUser userService;
 
-    public InMemoryLoginServiceImpl(UserDao userDao) {
-        this.userDao = userDao;
+    public InMemoryLoginServiceImpl(DBServiceUser userService) {
+        this.userService = userService;
     }
 
 
@@ -24,7 +23,7 @@ public class InMemoryLoginServiceImpl extends AbstractLoginService {
     @Override
     protected UserPrincipal loadUserInfo(String login) {
         System.out.println(String.format("InMemoryLoginService#loadUserInfo(%s)", login));
-        Optional<User> dbUser = userDao.findByLogin(login);
+        Optional<User> dbUser = userService.findByLogin(login);
         return dbUser.map(u -> new UserPrincipal(u.getLogin(), new Password(u.getPassword()))).orElse(null);
     }
 }

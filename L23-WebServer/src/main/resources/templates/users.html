@@ -20,7 +20,7 @@
 <button onclick="getUserById()">Получить</button>
 <pre id="userDataContainer"></pre>
 
-<h4>Случайный пользователь</h4>
+<h4>Список пользователей</h4>
 <table style="width: 400px">
     <thead>
     <tr>
@@ -31,13 +31,18 @@
     </tr>
     </thead>
     <tbody>
+    <#list allUsers as user>
     <tr>
-        <td>${randomUser.id}</td>
-        <td>${randomUser.name}</td>
-        <td>${randomUser.login}</td>
-        <td>${randomUser.password}</td>
+        <td>${user.id}</td>
+        <td>${user.name}</td>
+        <td>${user.login}</td>
+        <td>${user.password}</td>
     </tr>
+    </
+    #list>
     </tbody>
 </table>
+<br/>
+<a href="registration">Добавить нового пользователя</a>
 </body>
 </html>

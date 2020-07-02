@@ -9,7 +9,7 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.security.Constraint;
-import ru.otus.dao.UserDao;
+import ru.otus.services.DBServiceUser;
 import ru.otus.services.TemplateProcessor;
 
 import java.util.ArrayList;
@@ -25,10 +25,10 @@ public class UsersWebServerWithBasicSecurity extends UsersWebServerSimple {
 
     public UsersWebServerWithBasicSecurity(int port,
                                            LoginService loginService,
-                                           UserDao userDao,
+                                           DBServiceUser userService,
                                            Gson gson,
                                            TemplateProcessor templateProcessor) {
-        super(port, userDao, gson, templateProcessor);
+        super(port, userService, gson, templateProcessor);
         this.loginService = loginService;
     }
 

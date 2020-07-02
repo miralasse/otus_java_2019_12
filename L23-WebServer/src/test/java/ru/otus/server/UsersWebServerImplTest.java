@@ -7,8 +7,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.otus.dao.UserDao;
 import ru.otus.model.User;
+import ru.otus.services.DBServiceUser;
+import ru.otus.services.DbServiceUserImpl;
 import ru.otus.services.TemplateProcessor;
 import ru.otus.services.UserAuthService;
 
@@ -32,6 +33,7 @@ class UsersWebServerImplTest {
     private static final String WEB_SERVER_URL = "http://localhost:" + WEB_SERVER_PORT + "/";
     private static final String LOGIN_URL = "login";
     private static final String API_USER_URL = "api/user";
+    private static final String HIBERNATE_CFG_XML_FILE_RESOURCE = "hibernate-test.cfg.xml";
 
     private static final long DEFAULT_USER_ID = 1L;
     private static final String DEFAULT_USER_LOGIN = "user1";
@@ -45,15 +47,15 @@ class UsersWebServerImplTest {
     @BeforeAll
     static void setUp() throws Exception {
         TemplateProcessor templateProcessor = mock(TemplateProcessor.class);
-        UserDao userDao = mock(UserDao.class);
+        DBServiceUser userService = mock(DbServiceUserImpl.class);
         UserAuthService userAuthService = mock(UserAuthService.class);
 
         given(userAuthService.authenticate(DEFAULT_USER_LOGIN, DEFAULT_USER_PASSWORD)).willReturn(true);
         given(userAuthService.authenticate(INCORRECT_USER_LOGIN, DEFAULT_USER_PASSWORD)).willReturn(false);
-        given(userDao.findById(DEFAULT_USER_ID)).willReturn(Optional.of(DEFAULT_USER));
+        given(userService.findById(DEFAULT_USER_ID)).willReturn(Optional.of(DEFAULT_USER));
 
         gson = new GsonBuilder().serializeNulls().create();
-        webServer = new UsersWebServerWithFilterBasedSecurity(WEB_SERVER_PORT, userAuthService, userDao, gson, templateProcessor);
+        webServer = new UsersWebServerWithFilterBasedSecurity(WEB_SERVER_PORT, userAuthService, userService, gson, templateProcessor);
         webServer.start();
     }
 

@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import static java.util.Collections.emptyList;
+
 public class UserDaoHibernate implements UserDao {
     private static final Logger logger = LoggerFactory.getLogger(UserDaoHibernate.class);
 
@@ -39,16 +41,9 @@ public class UserDaoHibernate implements UserDao {
 
     @Override
     public Optional<User> findRandomUser() {
-
-        Session session = sessionManager.getCurrentSession().getHibernateSession();
-        try {
-            Random r = new Random();
-            List<User> users = session.createQuery("SELECT u FROM User u", User.class).getResultList();
-            return users.stream().skip(r.nextInt(users.size() - 1)).findFirst();
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-        return Optional.empty();
+        Random r = new Random();
+        List<User> allUsers = findAllUsers();
+        return allUsers.stream().skip(r.nextInt(allUsers.size() - 1)).findFirst();
     }
 
     @Override
@@ -91,7 +86,7 @@ public class UserDaoHibernate implements UserDao {
     }
 
     @Override
-    public void insertOrUpdate(User user) {
+    public long insertOrUpdate(User user) {
         DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
         try {
             Session hibernateSession = currentSession.getHibernateSession();
@@ -101,10 +96,22 @@ public class UserDaoHibernate implements UserDao {
                 hibernateSession.persist(user);
                 hibernateSession.flush();
             }
+            return user.getId();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new UserDaoException(e);
         }
+    }
+
+    @Override
+    public List<User> findAllUsers() {
+        Session session = sessionManager.getCurrentSession().getHibernateSession();
+        try {
+            return session.createQuery("SELECT u FROM User u", User.class).getResultList();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+        return emptyList();
     }
 
 

@@ -79,7 +79,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>ru.otus.WebServerSimpleDemo</mainClass>
+                            <mainClass>ru.otus.WebServerWithFilterBasedSecurityDemo</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

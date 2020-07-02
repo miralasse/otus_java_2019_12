@@ -3,8 +3,6 @@ package ru.otus.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @Entity
@@ -25,13 +23,6 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
-    private AddressDataSet address;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
-    private Set<PhoneDataSet> phones = new HashSet<>();
-
     public User() {
     }
 
@@ -42,11 +33,10 @@ public class User {
         this.password = password;
     }
 
-    public User(String name, String login, String password, AddressDataSet address, Set<PhoneDataSet> phones) {
+    public User(String name, String login, String password) {
         this.name = name;
         this.login = login;
         this.password = password;
-        this.address = address;
-        this.phones = phones;
     }
+
 }

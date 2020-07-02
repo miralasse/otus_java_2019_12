@@ -3,10 +3,7 @@ package ru.otus.dao;
 import ru.otus.model.User;
 import ru.otus.sessionmanager.SessionManager;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static java.lang.String.format;
@@ -17,7 +14,7 @@ public class InMemoryUserDao implements UserDao {
     private final Map<Long, User> users;
 
     public InMemoryUserDao() {
-        users = new HashMap<>();
+        users = new TreeMap<>();
         users.put(1L, new User(1L, "Крис Гир", "user1", "11111"));
         users.put(2L, new User(2L, "Ая Кэш", "user2", "11111"));
         users.put(3L, new User(3L, "Десмин Боргес", "user3", "11111"));
@@ -47,6 +44,7 @@ public class InMemoryUserDao implements UserDao {
     @Override
     public long insertUser(User user) {
         long id = userIdCount.incrementAndGet();
+        user.setId(id);
         users.put(id, user);
         return id;
     }
@@ -62,10 +60,19 @@ public class InMemoryUserDao implements UserDao {
     }
 
     @Override
-    public void insertOrUpdate(User user) {
-        Optional.ofNullable(user.getId())
-                .ifPresentOrElse(id -> users.put(id, user),
-                        () -> users.put(userIdCount.incrementAndGet(), user));
+    public long insertOrUpdate(User user) {
+        Long id = user.getId();
+        if (id != null) {
+            updateUser(user);
+            return id;
+        } else {
+            return insertUser(user);
+        }
+    }
+
+    @Override
+    public List<User> findAllUsers() {
+        return new ArrayList<>(users.values());
     }
 
     @Override
