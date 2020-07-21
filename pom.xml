@@ -34,6 +34,7 @@
         <module>L27-Multithreading</module>
         <module>L21-Cache</module>
         <module>L23-WebServer</module>
+        <module>L24-DI</module>
     </modules>
 
     <properties>
