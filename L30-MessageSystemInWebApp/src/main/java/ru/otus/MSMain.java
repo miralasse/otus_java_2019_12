@@ -3,8 +3,10 @@ package ru.otus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.db.DBServiceImpl;
 import ru.otus.db.handlers.GetUserDataRequestHandler;
+import ru.otus.db.hibernate.dao.UserDaoHibernate;
+import ru.otus.db.hibernate.sessionmanager.SessionManagerHibernate;
+import ru.otus.db.services.DbServiceUserImpl;
 import ru.otus.dto.UserData;
 import ru.otus.front.FrontendService;
 import ru.otus.front.FrontendServiceImpl;
@@ -31,7 +33,10 @@ public class MSMain {
         CallbackRegistry callbackRegistry = new CallbackRegistryImpl();
 
         HandlersStore requestHandlerDatabaseStore = new HandlersStoreImpl();
-        requestHandlerDatabaseStore.addHandler(MessageType.USER_DATA, new GetUserDataRequestHandler(new DBServiceImpl()));
+        requestHandlerDatabaseStore.addHandler(MessageType.USER_DATA, new GetUserDataRequestHandler(
+                new DbServiceUserImpl(
+                        new UserDaoHibernate(
+                                new SessionManagerHibernate()))));
         MsClient databaseMsClient = new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME,
                 messageSystem, requestHandlerDatabaseStore, callbackRegistry);
         messageSystem.addClient(databaseMsClient);

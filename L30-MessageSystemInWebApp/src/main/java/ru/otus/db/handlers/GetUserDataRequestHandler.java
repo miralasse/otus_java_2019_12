@@ -1,6 +1,6 @@
 package ru.otus.db.handlers;
 
-import ru.otus.db.DBService;
+import ru.otus.db.services.DBServiceUser;
 import ru.otus.dto.UserData;
 import ru.otus.messagesystem.RequestHandler;
 import ru.otus.messagesystem.message.Message;
@@ -11,16 +11,16 @@ import java.util.Optional;
 
 
 public class GetUserDataRequestHandler implements RequestHandler<UserData> {
-    private final DBService dbService;
+    private final DBServiceUser dbServiceUser;
 
-    public GetUserDataRequestHandler(DBService dbService) {
-        this.dbService = dbService;
+    public GetUserDataRequestHandler(DBServiceUser dbServiceUser) {
+        this.dbServiceUser = dbServiceUser;
     }
 
     @Override
     public Optional<Message> handle(Message msg) {
         UserData userData = MessageHelper.getPayload(msg);
-        UserData data = new UserData(userData.getUserId(), dbService.getUserData(userData.getUserId()));
+        UserData data = new UserData(userData.getUserId(), dbServiceUser.getUserData(userData.getUserId()));
         return Optional.of(MessageBuilder.buildReplyMessage(msg, data));
     }
 }
