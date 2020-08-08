@@ -18,9 +18,9 @@ public class CounterDemo {
     public static final int START = 1;
     public static final int LIMIT = 10;
 
-    private Lock lock = new ReentrantLock();
-    private Condition condition = lock.newCondition();
-    private CountDownLatch countDownLatch = new CountDownLatch(1);
+    private final Lock lock = new ReentrantLock();
+    private final Condition condition = lock.newCondition();
+    private final CountDownLatch countDownLatch = new CountDownLatch(1);
 
     private String latest = "";
 
