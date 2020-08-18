@@ -1,5 +1,6 @@
 package ru.otus.db.hibernate;
 
+import lombok.experimental.UtilityClass;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -9,10 +10,8 @@ import org.hibernate.cfg.Configuration;
 
 import java.util.Arrays;
 
+@UtilityClass
 public final class HibernateUtils {
-
-    private HibernateUtils() {
-    }
 
     public static SessionFactory buildSessionFactory(String configResourceFileName,
                                                      Class<?>... annotatedClasses) {

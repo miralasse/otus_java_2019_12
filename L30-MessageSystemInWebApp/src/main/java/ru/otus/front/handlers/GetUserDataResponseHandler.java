@@ -1,7 +1,8 @@
 package ru.otus.front.handlers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import ru.otus.dto.UserData;
 import ru.otus.messagesystem.RequestHandler;
 import ru.otus.messagesystem.client.CallbackRegistry;
@@ -12,27 +13,25 @@ import ru.otus.messagesystem.message.MessageHelper;
 
 import java.util.Optional;
 
+@Slf4j
+@Component
+@RequiredArgsConstructor
 public class GetUserDataResponseHandler implements RequestHandler<UserData> {
-    private static final Logger logger = LoggerFactory.getLogger(GetUserDataResponseHandler.class);
-
     private final CallbackRegistry callbackRegistry;
 
-    public GetUserDataResponseHandler(CallbackRegistry callbackRegistry) {
-        this.callbackRegistry = callbackRegistry;
-    }
 
     @Override
     public Optional<Message> handle(Message msg) {
-        logger.info("new message:{}", msg);
+        log.info("handling response for new message: {}", msg);
         try {
             MessageCallback<? extends ResultDataType> callback = callbackRegistry.getAndRemove(msg.getCallbackId());
             if (callback != null) {
                 callback.accept(MessageHelper.getPayload(msg));
             } else {
-                logger.error("callback for Id:{} not found", msg.getCallbackId());
+                log.error("callback for Id: {} not found", msg.getCallbackId());
             }
         } catch (Exception ex) {
-            logger.error("msg:{}", msg, ex);
+            log.error("msg: {}", msg, ex);
         }
         return Optional.empty();
     }

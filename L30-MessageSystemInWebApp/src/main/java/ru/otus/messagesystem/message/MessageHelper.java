@@ -1,8 +1,9 @@
 package ru.otus.messagesystem.message;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class MessageHelper {
-    private MessageHelper() {
-    }
 
     public static <T> T getPayload(Message msg) {
         return (T) Serializers.deserialize(msg.getPayload());

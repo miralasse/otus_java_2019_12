@@ -1,7 +1,6 @@
 package ru.otus.messagesystem.client;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import ru.otus.messagesystem.HandlersStore;
 import ru.otus.messagesystem.MessageSystem;
 import ru.otus.messagesystem.RequestHandler;
@@ -11,8 +10,8 @@ import ru.otus.messagesystem.message.MessageType;
 
 import java.util.Objects;
 
+@Slf4j
 public class MsClientImpl implements MsClient {
-    private static final Logger logger = LoggerFactory.getLogger(MsClientImpl.class);
 
     private final String name;
     private final MessageSystem messageSystem;
@@ -36,7 +35,7 @@ public class MsClientImpl implements MsClient {
     public boolean sendMessage(Message msg) {
         boolean result = messageSystem.newMessage(msg);
         if (!result) {
-            logger.error("the last message was rejected: {}", msg);
+            log.error("the last message was rejected: {}", msg);
         }
         return result;
     }
@@ -44,16 +43,16 @@ public class MsClientImpl implements MsClient {
     @SuppressWarnings("all")
     @Override
     public void handle(Message msg) {
-        logger.info("new message:{}", msg);
+        log.info("new message:{}", msg);
         try {
             RequestHandler requestHandler = handlersStore.getHandlerByType(msg.getType());
             if (requestHandler != null) {
                 requestHandler.handle(msg).ifPresent(message -> sendMessage((Message) message));
             } else {
-                logger.error("handler not found for the message type:{}", msg.getType());
+                log.error("handler not found for the message type:{}", msg.getType());
             }
         } catch (Exception ex) {
-            logger.error("msg:{}", msg, ex);
+            log.error("msg:{}", msg, ex);
         }
     }
 

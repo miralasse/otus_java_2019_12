@@ -1,17 +1,16 @@
 package ru.otus.messagesystem.message;
 
+import lombok.experimental.UtilityClass;
 import ru.otus.messagesystem.client.CallbackId;
 import ru.otus.messagesystem.client.ResultDataType;
 
 import java.util.UUID;
 
+@UtilityClass
 public class MessageBuilder {
     private static final Message VOID_MESSAGE =
             new Message(new MessageId(UUID.randomUUID().toString()), null, null,
                     null, "voidTechnicalMessage", new byte[1], null);
-
-    private MessageBuilder() {
-    }
 
     public static Message getVoidMessage() {
         return VOID_MESSAGE;
@@ -22,9 +21,9 @@ public class MessageBuilder {
         return buildMessage(from, to, sourceMessageId, data, msgType, null);
     }
 
-    public static <T extends ResultDataType> Message buildReplyMessage(Message message, T data) {
+    public static <T extends ResultDataType> Message buildReplyMessage(Message message, T data, MessageType msgType) {
         return buildMessage(message.getTo(), message.getFrom(), message.getId(), data,
-                MessageType.USER_DATA, message.getCallbackId());
+                msgType, message.getCallbackId());
     }
 
     private static <T extends ResultDataType> Message buildMessage(String from, String to, MessageId sourceMessageId,
