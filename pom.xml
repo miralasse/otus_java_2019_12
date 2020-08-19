@@ -35,7 +35,7 @@
         <module>L21-Cache</module>
         <module>L23-WebServer</module>
         <module>L24-DI</module>
-        <module>L25-SpringMVC</module>
+        <module>L30-MessageSystemInWebApp</module>
     </modules>
 
     <properties>

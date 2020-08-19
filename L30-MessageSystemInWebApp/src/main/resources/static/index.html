@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Пользователи</title>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/app.js"></script>
+</head>
+
+<body onload="initWebSocket()">
+
+<h4>Список пользователей</h4>
+<button id="getUsers" type="button" onclick="getUsers()">Обновить список</button>
+<table style="width: 400px">
+    <thead>
+    <tr>
+        <td style="width: 50px">Id</td>
+        <td style="width: 150px">Имя</td>
+        <td style="width: 100px">Логин</td>
+        <td style="width: 100px">Пароль</td>
+    </tr>
+    </thead>
+    <tbody id="users">
+    </tbody>
+</table>
+<br/>
+<h4>Добавить пользователя</h4>
+<form>
+
+    <label>Name</label> <br/>
+    <input type="text" id="name" placeholder="name">
+    <br/>
+
+    <label>Login</label><br/>
+    <input type="text" id="login" placeholder="login">
+    <br/>
+
+    <label>Password</label><br/>
+    <input type="password" id="password" placeholder="******">
+    <br/>
+    <br/>
+    <button type="submit" id="saveUser" onclick="createUser()">Добавить</button>
+
+</form>
+
+</body>
+</html>
