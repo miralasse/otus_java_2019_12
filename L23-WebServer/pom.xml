@@ -12,7 +12,7 @@
     <artifactId>L23-WebServer</artifactId>
 
     <properties>
-        <jetty.version>9.4.30.v20200611</jetty.version>
+        <jetty.version>9.4.35.v20201120</jetty.version>
         <maven-assembly-plugin.version>3.1.1</maven-assembly-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
     </properties>
